@@ -13,19 +13,25 @@ def bracket_check(str):
     for i in range(len(str)):
         s = str[i]
         if s == '(' or s == '[' or s == '{':
-            stack.push(s)
+            stack.push((s, i))
         elif s == ')' or s == ']' or s == '}':
-            p = ''
             if not stack.isEmpty():
-                p = stack.pop()
+                p, pos = stack.pop()
             else:
                 is_error = True
+                location.append(i)
+                continue
 
             if not ((p == '(') and (s == ')') or ((p == '[') and (s == ']')) or ((p == '{') and s == '}')):
                 is_error = True
                 location.append(i)
+                break
 
-    if not stack.isEmpty():
+    while not stack.isEmpty():
+        _, pos = stack.pop()
+        location.append(pos)
+
+    if location:
         is_error = True
 
     return is_error, location
