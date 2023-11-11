@@ -8,49 +8,42 @@ Pop คือการเอาข้อมูลที่พึ่ง Push ไ�
 
 การ Code เป็นการสร้างฟังก์ชัน bracket_check และใช้คลาส Stack เพื่อตรวจสอบว่าวงเล็บในข้อความที่กำหนดถูกปิดทุกครั้งหรือไม่ โดยใช้ Code ดังนี้ 
 
-from Stack import Stack
+    from Stack import Stack
+    def bracket_check(str):
+        is_error = False
+        location = []
+        stack = Stack()
 
+        for i in range(len(str)):
+            s = str[i]
+            if s == '(' or s == '[' or s == '{':
+                stack.push((s, i))
+            elif s == ')' or s == ']' or s == '}':
+                if not stack.isEmpty():
+                    p, pos = stack.pop()
+                else:
+                    is_error = True
+                    location.append(i)
+                    continue
 
-# input: str
-# output: ib_error : boolean
-# output: location : int
+                if not ((p == '(') and (s == ')') or ((p == '[') and (s == ']')) or ((p == '{') and s == '}')):
+                    is_error = True
+                    location.append(i)
+                    break
 
-def bracket_check(str):
-    is_error = False
-    location = []
-    stack = Stack()
+        while not stack.isEmpty():
+            _, pos = stack.pop()
+            location.append(pos)
 
-    for i in range(len(str)):
-        s = str[i]
-        if s == '(' or s == '[' or s == '{':
-            stack.push((s, i))
-        elif s == ')' or s == ']' or s == '}':
-            if not stack.isEmpty():
-                p, pos = stack.pop()
-            else:
-                is_error = True
-                location.append(i)
-                continue
+        if location:
+            is_error = True
 
-            if not ((p == '(') and (s == ')') or ((p == '[') and (s == ']')) or ((p == '{') and s == '}')):
-                is_error = True
-                location.append(i)
-                break
-
-    while not stack.isEmpty():
-        _, pos = stack.pop()
-        location.append(pos)
-
-    if location:
-        is_error = True
-
-    return is_error, location
-
-
-test_string = '[{(Hello)}]'
-isError, locations = bracket_check(test_string)
-print(f'error: {isError}')
-print('location:', locations)
+        return is_error, location
+    
+    test_string = '[{(Hello)}]'
+    isError, locations = bracket_check(test_string)
+    print(f'error: {isError}')
+    print('location:', locations)
 
 
 โดยมีการทำ Unittest ทั้งหมด 5 Test Cases ดังนี้
@@ -78,36 +71,36 @@ test_error_4 ตรวจสอบคำว่า '{}{'
 
 หลังจากแก้ไขแล้วจะได้ Code ดังนี้
 
-def bracket_check(str):
-    is_error = False
-    location = []
-    stack = Stack()
+    def bracket_check(str):
+        is_error = False
+        location = []
+        stack = Stack()
 
-    for i in range(len(str)):
-        s = str[i]
-        if s == '(' or s == '[' or s == '{':
-            stack.push((s, i))
-        elif s == ')' or s == ']' or s == '}':
-            if not stack.isEmpty():
-                p, pos = stack.pop()
-            else:
-                is_error = True
-                location.append(i)
-                continue
+        for i in range(len(str)):
+            s = str[i]
+            if s == '(' or s == '[' or s == '{':
+                stack.push((s, i))
+            elif s == ')' or s == ']' or s == '}':
+                if not stack.isEmpty():
+                    p, pos = stack.pop()
+                else:
+                    is_error = True
+                    location.append(i)
+                    continue
 
-            if not ((p == '(') and (s == ')') or ((p == '[') and (s == ']')) or ((p == '{') and s == '}')):
-                is_error = True
-                location.append(i)
-                break
+                if not ((p == '(') and (s == ')') or ((p == '[') and (s == ']')) or ((p == '{') and s == '}')):
+                    is_error = True
+                    location.append(i)
+                    break
 
-    while not stack.isEmpty():
-        _, pos = stack.pop()
-        location.append(pos)
+            while not stack.isEmpty():
+                _, pos = stack.pop()
+                location.append(pos)
+    
+            if location:
+            is_error = True
 
-    if location:
-        is_error = True
-
-    return is_error, location
+        return is_error, location
 
 ผลลัพธ์ออกมาหลังจากที่ Run Unittest พบว่าผ่านทุกการทดสอบ
 
